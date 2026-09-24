@@ -8,8 +8,8 @@ import { LeadUpdateModal } from '@/components/leads/LeadUpdateModal';
 import { ReassignModal } from '@/components/leads/ReassignModal';
 import { BulkActionBar } from '@/components/leads/BulkActionBar';
 import { Button } from '@/components/ui/Button';
-import { useCrmSync } from '@/lib/sync-event';
-import { getFastCache, setFastCache } from '@/lib/fast-data';
+import { emitCrmSync, useCrmSync } from '@/lib/sync-event';
+import { getFastCache, invalidateFastCache, setFastCache } from '@/lib/fast-data';
 import { useLiveUsers } from '@/lib/use-live-users';
 import { useSearchParams } from 'next/navigation';
 
