@@ -1,0 +1,529 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run complete CRM audit",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"run",
+				"scripts/test-complete-crm.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Typecheck CRM calling changes",
+			"type": "shell",
+			"command": "bunx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Typecheck CRM calling changes",
+			"type": "shell",
+			"command": "bunx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Run complete CRM audit",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"run",
+				"scripts/test-complete-crm.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Verify calling pool allocation",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"-e",
+				"import { prisma } from './lib/db'; import { processBulkCallingImport } from './services/import.service'; import { assignCallingPool } from './services/assignment.service'; const run = async () => { const phones = ['+919900000101', '+919900000102', '+919900000103']; await prisma.lead.deleteMany({ where: { phone: { in: phones } } }); const admin = await prisma.user.findUniqueOrThrow({ where: { email: 'nehra@orvion.com' } }); const exec = await prisma.user.findUniqueOrThrow({ where: { email: 'shubham@orvion.com' } }); const session = { id: admin.id, name: admin.name, email: admin.email, role: admin.role as any }; const imported = await processBulkCallingImport({ rows: phones.map((phone, index) => ({ clientName: `Pool Probe ${index + 1}`, phone, campaign: 'Pool Probe', callDate: '2026-09-20', callTime: '11:00' })), assignmentMode: 'UNASSIGNED', user: session }); if (imported.createdCount !== 3 || imported.assignedCount !== 0) throw new Error(`Unexpected import result: ${JSON.stringify(imported)}`); const assigned = await assignCallingPool({ count: 2, newOwnerId: exec.id, performer: session }); const records = await prisma.lead.findMany({ where: { phone: { in: phones } }, select: { currentOwnerId: true } }); const owned = records.filter((record) => record.currentOwnerId === exec.id).length; const waiting = records.filter((record) => record.currentOwnerId === null).length; if (assigned.assignedCount !== 2 || owned !== 2 || waiting !== 1) throw new Error(`Unexpected allocation state: ${JSON.stringify({ assigned, owned, waiting })}`); console.log('CALLING POOL CHECK: PASS (3 imported, 2 assigned, 1 remains)'); await prisma.lead.deleteMany({ where: { phone: { in: phones } } }); }; run().catch((error) => { console.error(error); process.exitCode = 1; }).finally(() => prisma.$disconnect());"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Verify calling pool allocation",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"-e",
+				"import { prisma } from \"./lib/db\"; import { processBulkCallingImport } from \"./services/import.service\"; import { assignCallingPool } from \"./services/assignment.service\"; const run = async () => { const phones = [\"+919900000101\", \"+919900000102\", \"+919900000103\"]; await prisma.lead.deleteMany({ where: { phone: { in: phones } } }); const admin = await prisma.user.findUniqueOrThrow({ where: { email: \"nehra@orvion.com\" } }); const exec = await prisma.user.findUniqueOrThrow({ where: { email: \"shubham@orvion.com\" } }); const session = { id: admin.id, name: admin.name, email: admin.email, role: admin.role as any }; const imported = await processBulkCallingImport({ rows: phones.map((phone, index) => ({ clientName: `Pool Probe ${index + 1}`, phone, campaign: \"Pool Probe\", callDate: \"2026-09-20\", callTime: \"11:00\" })), assignmentMode: \"UNASSIGNED\", user: session }); if (imported.createdCount !== 3 || imported.assignedCount !== 0) throw new Error(`Unexpected import result: ${JSON.stringify(imported)}`); const assigned = await assignCallingPool({ count: 2, newOwnerId: exec.id, performer: session }); const records = await prisma.lead.findMany({ where: { phone: { in: phones } }, select: { currentOwnerId: true } }); const owned = records.filter((record) => record.currentOwnerId === exec.id).length; const waiting = records.filter((record) => record.currentOwnerId === null).length; if (assigned.assignedCount !== 2 || owned !== 2 || waiting !== 1) throw new Error(`Unexpected allocation state: ${JSON.stringify({ assigned, owned, waiting })}`); console.log(\"CALLING POOL CHECK: PASS (3 imported, 2 assigned, 1 remains)\"); await prisma.lead.deleteMany({ where: { phone: { in: phones } } }); }; run().catch((error) => { console.error(error); process.exitCode = 1; }).finally(() => prisma.$disconnect());"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Test calling pool allocation",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"test",
+				"tests/bulk-import.test.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Check CRM diff",
+			"type": "shell",
+			"command": "git",
+			"args": [
+				"diff",
+				"--check"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Start local CRM",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"run",
+				"dev"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Typecheck calling storage UI",
+			"type": "shell",
+			"command": "bunx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Validate storage assignment flow",
+			"type": "shell",
+			"command": "bunx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Run calling pool regression",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"test",
+				"tests/bulk-import.test.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Final complete CRM audit",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"run",
+				"scripts/test-complete-crm.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Verify complete CRM",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"run",
+				"scripts/test-complete-crm.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Verify calling storage",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"test",
+				"tests/bulk-import.test.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Rerun calling storage alone",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"test",
+				"tests/bulk-import.test.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Inspect calling assignment failure",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"test",
+				"tests/bulk-import.test.ts",
+				"-t",
+				"Admin Calling Pool"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Recheck calling storage",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"test",
+				"tests/bulk-import.test.ts",
+				"-t",
+				"Admin Calling Pool"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run storage test suite",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"test",
+				"tests/bulk-import.test.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Final CRM verification",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"run",
+				"scripts/test-complete-crm.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Validate admin dialer removal",
+			"type": "shell",
+			"command": "bunx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Run all CRM tests sequentially",
+			"type": "shell",
+			"command": "powershell",
+			"args": [
+				"-NoProfile",
+				"-Command",
+				"$files = Get-ChildItem tests -Filter '*.test.ts' | Sort-Object Name; $failed = @(); foreach ($file in $files) { Write-Output ('=== ' + $file.Name + ' ==='); bun test $file.FullName; if ($LASTEXITCODE -ne 0) { $failed += $file.Name } }; if ($failed.Count -gt 0) { Write-Output ('FAILED: ' + ($failed -join ', ')); exit 1 } else { Write-Output ('ALL PASSED: ' + $files.Count + ' test files') }"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run full CRM test suite",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"test",
+				"tests/attendance-rules.test.ts",
+				"tests/bulk-import.test.ts",
+				"tests/bulk-upload-hub.test.ts",
+				"tests/comprehensive-audit.test.ts",
+				"tests/crm-core.test.ts",
+				"tests/enterprise-features-kanban-leaderboard.test.ts",
+				"tests/enterprise-pipeline-omnibar.test.ts",
+				"tests/executive-tasks.test.ts",
+				"tests/hr-module.test.ts",
+				"tests/lead-contact.test.ts",
+				"tests/meeting-visibility.test.ts",
+				"tests/profile-management.test.ts",
+				"tests/sla-and-enterprise-features.test.ts",
+				"tests/team-management.test.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run full CRM test suite",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"test",
+				"tests/attendance-rules.test.ts",
+				"tests/bulk-import.test.ts",
+				"tests/bulk-upload-hub.test.ts",
+				"tests/comprehensive-audit.test.ts",
+				"tests/crm-core.test.ts",
+				"tests/enterprise-features-kanban-leaderboard.test.ts",
+				"tests/enterprise-pipeline-omnibar.test.ts",
+				"tests/executive-tasks.test.ts",
+				"tests/hr-module.test.ts",
+				"tests/lead-contact.test.ts",
+				"tests/meeting-visibility.test.ts",
+				"tests/profile-management.test.ts",
+				"tests/sla-and-enterprise-features.test.ts",
+				"tests/team-management.test.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Typecheck role guards",
+			"type": "shell",
+			"command": "bunx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Run full CRM test suite",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"test",
+				"tests/attendance-rules.test.ts",
+				"tests/bulk-import.test.ts",
+				"tests/bulk-upload-hub.test.ts",
+				"tests/comprehensive-audit.test.ts",
+				"tests/crm-core.test.ts",
+				"tests/enterprise-features-kanban-leaderboard.test.ts",
+				"tests/enterprise-pipeline-omnibar.test.ts",
+				"tests/executive-tasks.test.ts",
+				"tests/hr-module.test.ts",
+				"tests/lead-contact.test.ts",
+				"tests/meeting-visibility.test.ts",
+				"tests/profile-management.test.ts",
+				"tests/sla-and-enterprise-features.test.ts",
+				"tests/team-management.test.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Check seeded admin credential",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"-e",
+				"import { prisma } from './lib/db'; import { comparePassword } from './lib/auth'; const user = await prisma.user.findUnique({ where: { email: 'nehra@orvion.com' }, select: { passwordHash: true } }); console.log(user ? (await comparePassword('Nehra@1228', user.passwordHash) ? 'SEEDED_ADMIN_PASSWORD_VALID' : 'SEEDED_ADMIN_PASSWORD_CHANGED') : 'ADMIN_MISSING'); await prisma.$disconnect();"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Test attendance cutoff",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"test",
+				"tests/attendance-rules.test.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Test calling storage flow",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"test",
+				"tests/bulk-import.test.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Typecheck attendance gate",
+			"type": "shell",
+			"command": "bunx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Recheck calling gate tests",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"test",
+				"tests/bulk-import.test.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run calling gate regression",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"test",
+				"tests/bulk-import.test.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run full suite after attendance gate",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"test",
+				"tests/attendance-rules.test.ts",
+				"tests/bulk-import.test.ts",
+				"tests/bulk-upload-hub.test.ts",
+				"tests/comprehensive-audit.test.ts",
+				"tests/crm-core.test.ts",
+				"tests/enterprise-features-kanban-leaderboard.test.ts",
+				"tests/enterprise-pipeline-omnibar.test.ts",
+				"tests/executive-tasks.test.ts",
+				"tests/hr-module.test.ts",
+				"tests/lead-contact.test.ts",
+				"tests/meeting-visibility.test.ts",
+				"tests/profile-management.test.ts",
+				"tests/sla-and-enterprise-features.test.ts",
+				"tests/team-management.test.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Final typecheck",
+			"type": "shell",
+			"command": "bunx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Validate attendance message removal",
+			"type": "shell",
+			"command": "bunx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Validate shift detail removal",
+			"type": "shell",
+			"command": "bunx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Validate PWA alignment",
+			"type": "shell",
+			"command": "bunx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Validate notification alignment",
+			"type": "shell",
+			"command": "bunx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Validate notification drawer height",
+			"type": "shell",
+			"command": "bunx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Verify HR role suite",
+			"type": "shell",
+			"command": "bun",
+			"args": [
+				"test",
+				"tests/hr-module.test.ts",
+				"tests/attendance-rules.test.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}

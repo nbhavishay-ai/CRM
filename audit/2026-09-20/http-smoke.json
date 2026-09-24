@@ -1,0 +1,68 @@
+[
+  {
+    "path": "/login",
+    "status": 200,
+    "location": null,
+    "contentType": "text/html; charset=utf-8"
+  },
+  {
+    "path": "/dashboard",
+    "status": 307,
+    "location": "/login",
+    "contentType": "text/html; charset=utf-8"
+  },
+  {
+    "path": "/dashboard/admin/dashboard",
+    "status": 307,
+    "location": "/login",
+    "contentType": "text/html; charset=utf-8"
+  },
+  {
+    "path": "/api/users",
+    "status": 401,
+    "location": null,
+    "contentType": "application/json"
+  },
+  {
+    "path": "/api/leads",
+    "status": 401,
+    "location": null,
+    "contentType": "application/json"
+  },
+  {
+    "path": "/api/meetings",
+    "status": 401,
+    "location": null,
+    "contentType": "application/json"
+  },
+  {
+    "path": "/api/hr/employees",
+    "status": 403,
+    "location": null,
+    "contentType": "application/json"
+  },
+  {
+    "path": "/api/reports",
+    "status": 401,
+    "location": null,
+    "contentType": "application/json"
+  },
+  {
+    "path": "/manifest.json",
+    "status": 200,
+    "location": null,
+    "contentType": "application/json; charset=UTF-8"
+  },
+  {
+    "path": "/sw.js",
+    "status": 200,
+    "location": null,
+    "contentType": "application/javascript; charset=UTF-8"
+  },
+  {
+    "path": "/icon-192.png",
+    "status": 200,
+    "location": null,
+    "contentType": "image/png"
+  }
+]

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="carbonBg512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0C0D" />
+      <stop offset="50%" stop-color="#111314" />
+      <stop offset="100%" stop-color="#17191A" />
+    </linearGradient>
+    <linearGradient id="champagneGold512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D2BE91" />
+      <stop offset="50%" stop-color="#C6AD7A" />
+      <stop offset="100%" stop-color="#B69A63" />
+    </linearGradient>
+    <filter id="goldGlow512" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#B69A63" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Dark Luxury Background with subtle bevel -->
+  <rect width="512" height="512" rx="116" fill="url(#carbonBg512)" stroke="#252829" stroke-width="4" />
+  
+  <!-- Outer Gold Ring -->
+  <circle cx="256" cy="256" r="144" fill="none" stroke="url(#champagneGold512)" stroke-width="16" filter="url(#goldGlow512)" />
+  
+  <!-- Inner Subtle Accent Ring -->
+  <circle cx="256" cy="256" r="112" fill="none" stroke="#252829" stroke-width="4" stroke-dasharray="10 10" />
+  
+  <!-- Center Monogram "O" -->
+  <text x="256" y="292" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="105" font-weight="900" fill="url(#champagneGold512)" text-anchor="middle" letter-spacing="3">O</text>
+  
+  <!-- Top Accent Dot -->
+  <circle cx="256" cy="92" r="9" fill="#D2BE91" />
+</svg>

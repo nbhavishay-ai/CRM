@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ORVION — Enterprise Full-Stack Web CRM
 
-## Getting Started
+> **Brand Philosophy**: *"Every Lead. Every Update. Every Day. Nothing Left Behind."*  
+> **Primary Objective**: No lead should ever be lost, forgotten, duplicated, or left without accountability.
 
-First, run the development server:
+ORVION is a production-quality enterprise CRM application built from scratch with a clean, decoupled architecture. It separates **Current State** from **Immutable History**, enforcing 100% auditable ownership, atomic reassignments, and zero silent overdue leads.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🌟 Architecture & Core Principles
+
+```
+orvion/
+├── app/
+│   ├── (auth)/login/               # Enterprise authentication & persona switcher
+│   ├── (dashboard)/
+│   │   ├── admin/                  # Control Center, All Leads, NA/NI/CP/Other queues, Teams, Users, Audit, Sync
+│   │   ├── team-lead/              # Team Dashboard, VIEW TEAM WORKFLOW, Member Workspace inspection
+│   │   ├── executive/              # "What do I need to do today?", Today's Leads, Calling Data, Workspace
+│   │   ├── leads/[id]/             # Master Lead Detail ("ONE LEAD = ONE COMPLETE STORY")
+│   │   ├── meetings/               # Client Meetings scheduler, outcome logger
+│   │   └── reports/                # Conversion Funnel & Executive productivity (Recharts)
+│   └── api/                        # Mobile-ready REST API endpoints
+├── components/
+│   ├── layout/                     # Role-aware Sidebar, Topbar with Real-time Sync & Notifications
+│   ├── leads/                      # LeadCard, LeadTable, NewLeadModal, LeadUpdateModal, ReassignModal
+│   ├── timeline/                   # Chronological Lead Story Timeline
+│   └── ui/                         # Badge, Button, Modal
+├── lib/
+│   ├── db.ts                       # Prisma Client singleton
+│   ├── auth.ts                     # JWT authentication, bcrypt hashing & Bearer token support
+│   ├── permissions.ts              # Role-Based Access Control (RBAC)
+│   └── lead-number.ts              # Permanent sequential ORV-000001 generator
+├── services/                       # Isolated business logic layer
+│   ├── lead.service.ts             # CRUD, server filtering, pagination, attention metrics
+│   ├── assignment.service.ts       # Atomic Prisma transactions for reassignment
+│   ├── followup.service.ts         # Overdue calculation & Calling Data engine
+│   ├── meeting.service.ts          # Meeting lifecycle management
+│   ├── audit.service.ts            # Immutable audit logging
+│   └── report.service.ts           # Real database analytics
+├── prisma/
+│   ├── schema.prisma               # Relational schema with indexes & foreign keys
+│   └── seed.ts                     # Enterprise test data & multi-hop reassignment chains
+└── tests/
+    └── crm-core.test.ts            # Automated tests for business rules
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🔑 Pre-Seeded Employee Personas
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+All accounts use the password: **`Password@123`**
 
-## Learn More
+| Role | Name | Email | Scope |
+| :--- | :--- | :--- | :--- |
+| **MAIN ADMIN** | Vikramaditya Singhania | `admin@orvion.com` | Full company-wide control, all leads, teams, audit, sync |
+| **TEAM LEAD 1** | Rajesh Mehra | `rajesh@orvion.com` | Supervises Alpha Strategic Sales team & member workflows |
+| **TEAM LEAD 2** | Ananya Deshmukh | `ananya@orvion.com` | Supervises Bravo Commercial & Retail team |
+| **EXECUTIVE 1** | Rahul Sharma | `rahul@orvion.com` | Team Alpha active lead workspace & calling schedule |
+| **EXECUTIVE 2** | Amit Verma | `amit@orvion.com` | Team Alpha active lead workspace |
+| **EXECUTIVE 3** | Priya Patel | `priya@orvion.com` | Team Bravo active lead workspace |
+| **EXECUTIVE 4** | Karan Mehta | `karan@orvion.com` | Team Bravo active lead workspace |
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🚀 Quick Launch & Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 1. Install Dependencies
+```bash
+bun install
+# or npm install
+```
 
-## Deploy on Vercel
+### 2. Configure Environment
+Copy `.env.example` to `.env`:
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/orvion?schema=public"
+JWT_SECRET="generate-a-unique-random-secret"
+NEXT_PUBLIC_APP_NAME="ORVION"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Initialize Database & Seed
+```bash
+# Apply reviewed PostgreSQL migrations
+bunx prisma migrate deploy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Provision initial accounts and seed data explicitly
+bun run seed
+```
+
+### 4. Run Development Server
+```bash
+bun run dev
+```
+Open **http://localhost:3000** in your browser.
+
+---
+
+## 🧪 Automated Business Rule Tests
+
+Run the automated test suite verifying core CRM invariants:
+```bash
+bun test
+```
+
+Verified rules:
+1. **Multi-hop Reassignment Chain**: `Rahul → Amit → Priya → Karan → Rahul` preserves permanent Lead ID, generates unbroken assignment logs, and marks lead as **NEW TO ME** for recipient.
+2. **Not Answering (NA) Isolation**: Marking NA removes lead from active workspace and shifts it into Admin NA triage queue with full remark history.
+3. **Immutable Remarks History**: Successive updates never overwrite previous remarks.
+4. **Strict RBAC Isolation**: Executives cannot access peer leads; Team Leads cannot cross into other teams.
+5. **Real Attention Metrics**: Admin counts (unassigned, overdue follow-ups, without next action) derive directly from database aggregates.
+
+---
+
+## 📱 Future Mobile App Integration
+
+The backend is built from day one to power both the Web CRM and the upcoming Mobile App:
+- **Shared Authentication**: Endpoints accept both standard **HttpOnly cookies** (web) and **`Authorization: Bearer <token>`** headers (mobile).
+- **Decoupled Services**: Business logic lives strictly in `services/`, not inside React components.
+- **RESTful Endpoints**: Full API surface available under `/api/*`.
+
+---
+
+## ☁️ Vercel & Production Deployment
+
+To deploy to Vercel with PostgreSQL (Supabase, Neon, or Railway):
+1. Set `DATABASE_URL`, `JWT_SECRET`, and `NEXT_PUBLIC_APP_URL` in Vercel project settings.
+2. Run reviewed migrations separately with `prisma migrate deploy` before starting the application.
+3. Build command: `prisma generate && next build`. Builds never mutate or seed the database.

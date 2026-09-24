@@ -1,0 +1,445 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output = "./node_modules/audit-client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("ORVION_AUDIT_DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         String    @default("EXECUTIVE") // "ADMIN", "TEAM_LEAD", "EXECUTIVE"
+  active       Boolean   @default(true)
+  teamId       String?
+  team         Team?     @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  lastLoginAt  DateTime?
+
+  // HR & Profile Fields
+  phone            String?
+  designation      String?   // e.g. "Senior Sales Closer", "Telecaller", "Team Lead", "HR Manager"
+  department       String?   // e.g. "Sales", "Human Resources", "Operations"
+  dateOfJoining    DateTime?
+  baseSalary       Float?
+  emergencyContact String?
+  routingAvailable Boolean   @default(true) // Whether executive is available for automated lead routing
+
+  // Relations
+  ownedLeads          Lead[]           @relation("CurrentOwner")
+  createdMeetings     Meeting[]        @relation("MeetingCreator")
+  assignedFromHistory LeadAssignment[] @relation("PreviousOwner")
+  assignedToHistory   LeadAssignment[] @relation("NewOwner")
+  performedAssigns    LeadAssignment[] @relation("PerformedBy")
+  leadUpdates         LeadUpdate[]
+  statusHistory       LeadStatusHistory[]
+  followups           LeadFollowup[]
+  callLogs            CallLog[]
+  notifications       Notification[]
+  pushSubscriptions   PushSubscription[]
+  auditLogs           AuditLog[]
+
+  // HR Relations
+  attendances    Attendance[]
+  markOutRequests MarkOutRequest[] @relation("MarkOutRequester")
+  reviewedMarkOutRequests MarkOutRequest[] @relation("MarkOutReviewer")
+  leaveRequests  LeaveRequest[]   @relation("LeaveApplicant")
+  reviewedLeaves LeaveRequest[]   @relation("LeaveReviewer")
+  salesTargets   SalesTarget[]
+
+  // Task Relations
+  assignedTasks  ExecutiveTask[]  @relation("TaskAssignee")
+  createdTasks   ExecutiveTask[]  @relation("TaskCreator")
+
+  @@index([role])
+  @@index([teamId])
+  @@index([email])
+}
+
+model Team {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members User[]
+}
+
+model Lead {
+  id              String    @id @default(uuid())
+  leadNumber      String    @unique // e.g. ORV-000001
+  clientName      String
+  phone           String
+  alternatePhone  String?
+  email           String?
+  company         String?
+  location        String?
+  source          String    @default("Direct") // Website, Referral, Cold Call, Campaign, etc.
+  notes           String?
+  currentOwnerId  String?
+  currentOwner    User?     @relation("CurrentOwner", fields: [currentOwnerId], references: [id], onDelete: SetNull)
+  
+  currentStatus   String    @default("NEW") 
+  // "NEW", "INTERESTED", "FOLLOW_UP", "CALL_BACK", "MEETING", "SITE_VISIT", 
+  // "QUOTATION", "NEGOTIATION", "NOT_ANSWERING", "NOT_INTERESTED", 
+  // "CHANNEL_PARTNER", "OTHER", "CLOSED_WON", "CLOSED_LOST"
+
+  currentCategory String    @default("ACTIVE") // ACTIVE, NOT_ANSWERING, NOT_INTERESTED, CHANNEL_PARTNER, OTHER, CLOSED
+  
+  nextAction      String?
+  nextActionAt    DateTime?
+  isNewToMe       Boolean   @default(true)
+  score           Int       @default(50)       // 0 - 100 Lead Quality Score
+  temperature     String    @default("WARM")   // "HOT", "WARM", "COLD"
+  estimatedValue  Float?    @default(0)        // Expected Deal Value in INR
+  lastUpdatedAt   DateTime  @default(now())
+  lastRemarkedAt  DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Sync fields
+  sourceIdentifier String?
+  lastSyncedAt     DateTime?
+
+  // Relations
+  assignments    LeadAssignment[]
+  updates        LeadUpdate[]
+  statusHistory  LeadStatusHistory[]
+  followups      LeadFollowup[]
+  meetings       Meeting[]
+  callLogs       CallLog[]
+
+  @@index([leadNumber])
+  @@index([phone])
+  @@index([currentOwnerId])
+  @@index([currentStatus])
+  @@index([currentCategory])
+  @@index([score])
+  @@index([temperature])
+  @@index([nextActionAt])
+  @@index([createdAt])
+  @@index([lastUpdatedAt])
+  @@index([lastRemarkedAt])
+  @@index([currentCategory, nextActionAt])
+  @@index([currentOwnerId, currentCategory])
+  @@index([currentCategory, currentStatus])
+  @@index([currentOwnerId, isNewToMe])
+}
+
+model LeadAssignment {
+  id              String   @id @default(uuid())
+  leadId          String
+  lead            Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  previousOwnerId String?
+  previousOwner   User?    @relation("PreviousOwner", fields: [previousOwnerId], references: [id], onDelete: SetNull)
+  newOwnerId      String?
+  newOwner        User?    @relation("NewOwner", fields: [newOwnerId], references: [id], onDelete: SetNull)
+  performedById   String
+  performedBy     User     @relation("PerformedBy", fields: [performedById], references: [id], onDelete: Restrict)
+  reason          String?
+  type            String   @default("REASSIGNMENT") // "INITIAL", "REASSIGNMENT", "UNASSIGNED"
+  timestamp       DateTime @default(now())
+
+  @@index([leadId])
+  @@index([previousOwnerId])
+  @@index([newOwnerId])
+  @@index([timestamp])
+}
+
+model LeadUpdate {
+  id              String    @id @default(uuid())
+  leadId          String
+  lead            Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+  remark          String
+  nextAction      String?
+  nextActionAt    DateTime?
+  durationSeconds Int?
+  disposition     String?
+  createdAt       DateTime  @default(now())
+
+  @@index([leadId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model CallLog {
+  id              String   @id @default(uuid())
+  leadId          String
+  lead            Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  durationSeconds Int      @default(0)
+  disposition     String   // "CONNECTED_INTERESTED", "CALL_BACK", "BUSY", "NOT_ANSWERING", "NOT_INTERESTED", "WRONG_NUMBER"
+  notes           String?
+  recordingUrl    String?  // simulated audio recording URL / audio asset
+  createdAt       DateTime @default(now())
+
+  @@index([leadId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([disposition])
+}
+
+model LeadStatusHistory {
+  id         String   @id @default(uuid())
+  leadId     String
+  lead       Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  fromStatus String
+  toStatus   String
+  reason     String?
+  createdAt  DateTime @default(now())
+
+  @@index([leadId])
+  @@index([createdAt])
+}
+
+model LeadFollowup {
+  id          String    @id @default(uuid())
+  leadId      String
+  lead        Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Restrict)
+  dueAt       DateTime
+  completedAt DateTime?
+  outcome     String?
+  nextAction  String?
+  createdAt   DateTime  @default(now())
+
+  @@index([leadId])
+  @@index([userId])
+  @@index([dueAt])
+  @@index([completedAt])
+}
+
+model Meeting {
+  id          String    @id @default(uuid())
+  leadId      String
+  lead        Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  createdById String
+  createdBy   User      @relation("MeetingCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  scheduledAt DateTime
+  date        String    // e.g. "2026-09-15"
+  time        String    // e.g. "14:30"
+  meetingType String    @default("Online") // "Online", "Office Visit", "Site Visit", "Client Location"
+  location    String?
+  notes       String?
+  reminder    String?
+  status      String    @default("UPCOMING") // "UPCOMING", "COMPLETED", "CANCELLED", "RESCHEDULED"
+  outcome     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([leadId])
+  @@index([createdById])
+  @@index([scheduledAt])
+  @@index([status])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // "LEAD_ASSIGNED", "LEAD_REASSIGNED", "FOLLOWUP_DUE", "MEETING_REMINDER", "SYSTEM"
+  title     String
+  message   String
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([read])
+  @@index([createdAt])
+}
+
+model PushSubscription {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  actorId   String?
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action    String   // "LOGIN", "CREATE_LEAD", "REASSIGN_LEAD", "UPDATE_LEAD", etc.
+  entity    String   // "LEAD", "USER", "TEAM", "MEETING", "AUTH"
+  entityId  String?
+  metadata  String?  // JSON string
+  createdAt DateTime @default(now())
+
+  @@index([actorId])
+  @@index([action])
+  @@index([entity])
+  @@index([createdAt])
+}
+
+model SyncLog {
+  id               String   @id @default(uuid())
+  sourceIdentifier String
+  status           String   // "SUCCESS", "FAILED", "PARTIAL"
+  recordsProcessed Int      @default(0)
+  errors           String?  // JSON string
+  createdAt        DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model Attendance {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      String    // YYYY-MM-DD
+  status    String    @default("PRESENT") // "PRESENT", "ABSENT", "HALF_DAY", "ON_LEAVE", "ON_FIELD"
+  clockIn   DateTime?
+  clockOut  DateTime?
+  workHours Float?
+  notes     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([userId, date])
+  @@index([date])
+  @@index([userId])
+}
+
+model MarkOutRequest {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation("MarkOutRequester", fields: [userId], references: [id], onDelete: Cascade)
+  date       String
+  reason     String
+  status     String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  reviewedById String?
+  reviewedBy User?    @relation("MarkOutReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, date])
+  @@index([status])
+  @@index([date])
+}
+
+model LeaveRequest {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation("LeaveApplicant", fields: [userId], references: [id], onDelete: Cascade)
+  leaveType     String    // "CASUAL", "SICK", "PAID", "UNPAID"
+  startDate     String    // YYYY-MM-DD
+  endDate       String    // YYYY-MM-DD
+  daysCount     Float
+  reason        String
+  status        String    @default("PENDING") // "PENDING", "APPROVED", "REJECTED", "CANCELLED"
+  reviewedById  String?
+  reviewedBy    User?     @relation("LeaveReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewComment String?
+  reviewedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([startDate])
+}
+
+model SalesTarget {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  period         String   // YYYY-MM e.g. "2026-09"
+  targetCalls    Int      @default(0)
+  targetMeetings Int      @default(0)
+  targetRevenue  Float    @default(0)
+  commissionRate Float    @default(2.0) // percentage
+  bonus          Float    @default(0)
+  deductions     Float    @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([userId, period])
+  @@index([userId])
+  @@index([period])
+}
+
+model JobOpening {
+  id            String      @id @default(uuid())
+  title         String
+  department    String      @default("Sales")
+  location      String      @default("Ahmedabad")
+  openingsCount Int         @default(1)
+  experience    String      // e.g. "2-4 years"
+  status        String      @default("OPEN") // "OPEN", "PAUSED", "CLOSED"
+  description   String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  candidates    Candidate[]
+}
+
+model Candidate {
+  id               String      @id @default(uuid())
+  jobOpeningId     String?
+  jobOpening       JobOpening? @relation(fields: [jobOpeningId], references: [id], onDelete: SetNull)
+  fullName         String
+  email            String
+  phone            String
+  currentCompany   String?
+  experienceYears  Float?
+  currentCtc       Float?
+  expectedCtc      Float?
+  noticePeriodDays Int?
+  stage            String      @default("APPLIED") // "APPLIED", "SCREENING", "INTERVIEW_1", "MOCK_PITCH", "OFFER", "HIRED", "REJECTED"
+  rating           Int?
+  notes            String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@index([stage])
+  @@index([jobOpeningId])
+}
+
+model ExecutiveTask {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  priority    String    @default("NORMAL") // "HIGH", "NORMAL", "LOW"
+  dueDate     String    // YYYY-MM-DD
+  dueTime     String    // HH:mm e.g. "17:00"
+  status      String    @default("PENDING") // "PENDING", "COMPLETED", "OVERDUE"
+  completedAt DateTime?
+
+  assigneeId  String
+  assignee    User      @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: Cascade)
+
+  createdById String
+  createdBy   User      @relation("TaskCreator", fields: [createdById], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([assigneeId])
+  @@index([dueDate])
+  @@index([status])
+  @@index([createdById])
+}
+

@@ -1,0 +1,25 @@
+{
+  "name": "ORVION Enterprise CRM",
+  "short_name": "ORVION",
+  "description": "Every Lead. Every Update. Every Day. Nothing Left Behind. High-performance enterprise sales & workforce CRM.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#111314",
+  "theme_color": "#111314",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "utilities"]
+}

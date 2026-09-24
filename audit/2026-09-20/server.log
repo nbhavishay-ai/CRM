@@ -1,0 +1,128 @@
+▲ Next.js 16.3.5
+- Local:         http://localhost:3217
+- Network:       http://192.168.56.1:3217
+✓ Ready in 459ms
+⚠ Warning: Next.js ignored package-lock.json in C:\Users\toxic because it is outside the current Git repository (C:\Users\toxic\.gemini\antigravity\scratch\orvion).
+ To use this directory, set `outputFileTracingRoot` in your Next.js config.
+
+✓ Running next.config.ts took 100ms
+prisma:error 
+Invalid `prisma.$queryRawUnsafe()` invocation:
+
+
+error: Error validating datasource `db`: the URL must start with the protocol `postgresql://` or `postgres://`.
+  -->  schema.prisma:10
+   | 
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+prisma:error 
+Invalid `prisma.$queryRawUnsafe()` invocation:
+
+
+error: Error validating datasource `db`: the URL must start with the protocol `postgresql://` or `postgres://`.
+  -->  schema.prisma:10
+   | 
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+prisma:error 
+Invalid `prisma.$queryRawUnsafe()` invocation:
+
+
+error: Error validating datasource `db`: the URL must start with the protocol `postgresql://` or `postgres://`.
+  -->  schema.prisma:10
+   | 
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+prisma:error 
+Invalid `prisma.$queryRawUnsafe()` invocation:
+
+
+error: Error validating datasource `db`: the URL must start with the protocol `postgresql://` or `postgres://`.
+  -->  schema.prisma:10
+   | 
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+prisma:error 
+Invalid `prisma.$queryRawUnsafe()` invocation:
+
+
+error: Error validating datasource `db`: the URL must start with the protocol `postgresql://` or `postgres://`.
+  -->  schema.prisma:10
+   | 
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+prisma:error 
+Invalid `prisma.$queryRawUnsafe()` invocation:
+
+
+error: Error validating datasource `db`: the URL must start with the protocol `postgresql://` or `postgres://`.
+  -->  schema.prisma:10
+   | 
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+prisma:error 
+Invalid `prisma.$queryRawUnsafe()` invocation:
+
+
+error: Error validating datasource `db`: the URL must start with the protocol `postgresql://` or `postgres://`.
+  -->  schema.prisma:10
+   | 
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+prisma:error 
+Invalid `prisma.$queryRawUnsafe()` invocation:
+
+
+error: Error validating datasource `db`: the URL must start with the protocol `postgresql://` or `postgres://`.
+  -->  schema.prisma:10
+   | 
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+prisma:error 
+Invalid `prisma.$queryRawUnsafe()` invocation:
+
+
+error: Error validating datasource `db`: the URL must start with the protocol `postgresql://` or `postgres://`.
+  -->  schema.prisma:10
+   | 
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1
+prisma:error 
+Invalid `prisma.$queryRawUnsafe()` invocation:
+
+
+error: Error validating datasource `db`: the URL must start with the protocol `postgresql://` or `postgres://`.
+  -->  schema.prisma:10
+   | 
+ 9 |   provider = "postgresql"
+10 |   url      = env("DATABASE_URL")
+   | 
+
+Validation Error Count: 1

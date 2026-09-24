@@ -1,0 +1,56 @@
+bun test v1.4.0 (34cbb9a40)
+
+audit\2026-09-20\reproductions.test.js:
+(pass) A02: executive changes another executive lead through bulk status endpoint [92.84ms]
+(pass) A03: team lead deletes another team lead record by ID [41.85ms]
+(pass) A04: executive creates and completes meeting on another executive lead [74.10ms]
+(pass) A05: follow-up ID from a different lead bypasses URL lead authorization [67.15ms]
+(pass) A06: deactivated and demoted admin token still gets admin-only metrics [44.38ms]
+(pass) A07: executive receives other staff salary and emergency contact [29.59ms]
+(pass) A08: team lead with no team sees another team meeting and global reports [44.76ms]
+Delete user error: 116 | 
+117 | Example:
+118 |   await prisma.$executeRawUnsafe(\`ALTER USER prisma WITH PASSWORD '\${password}'\`)
+119 | 
+120 | More Information: https://pris.ly/d/execute-raw
+121 | `)}var Eo=({clientMethod:e,activeProvider:t})=>r=>{let n="",i;if(Ca(r))n=r.sql,i={values:jt(r.values),__prismaRawParameters__:!0};else if(Array.isArray(r)){let[o,...s]=r;n=o,i={values:jt(s||[]),__prismaRawParameters__:!0}}else switch(t){case"sqlite":case"mysql":{n=r.sql,i={values:jt(r.values),__prismaRawParameters__:!0};break}case"cockroachdb":case"postgresql":case"postgres":{n=r.text,i={values:jt(r.values),__prismaRawParameters__:!0};break}case"sqlserver":{n=kl(r),i={values:jt(r.values),__prismaRawParameters__:!0};break}default:throw new Error(`The ${t} provider does not support ${e}`)}return i?.values?Ml(`prisma.${e}(${n}, ${i.values})`):Ml(`prisma.${e}(${n})`),{query:n,parameters:i}},$l={requestArgsToMiddlewareArgs(e){return[e.strings,...e.values]},middlewareArgsToRequestArgs(e){let[t,...r]=e;return new ae(t,r)}},ql={requestArgsToMiddlewareArgs(e){return[e]},middlewareArgsToRequestArgs(e){return e[0]}};function wo(e){return function(r,n){let i,o=(s=e)=>{try{return s===void 0||s?.kind==="itx"?i??=Vl(r(s)):V
+
+PrismaClientKnownRequestError: 
+Invalid `tx.user.deleteMany()` invocation in
+C:\Users\toxic\.gemini\antigravity\scratch\orvion\app\api\users\route.ts:330:21
+
+  327 });
+  328 
+  329 // 5. Delete the User records
+→ 330 await tx.user.deleteMany(
+Foreign key constraint violated: `foreign key`
+ clientVersion: "6.4.1",
+       meta: {
+  modelName: "User",
+  field_name: "foreign key",
+},
+       code: "P2003"
+
+      at handleRequestError (C:\Users\toxic\.gemini\antigravity\scratch\orvion\audit\2026-09-20\node_modules\audit-client\runtime\library.js:121:7447)
+      at handleAndLogRequestError (C:\Users\toxic\.gemini\antigravity\scratch\orvion\audit\2026-09-20\node_modules\audit-client\runtime\library.js:121:6771)
+      at request (C:\Users\toxic\.gemini\antigravity\scratch\orvion\audit\2026-09-20\node_modules\audit-client\runtime\library.js:121:6478)
+
+(pass) A11: deleting user with a follow-up fails and transaction rolls back [48.03ms]
+(pass) A12: user deletion rewrites historical author to administrator [55.87ms]
+(pass) A13: two concurrent lead-number allocations return the same ID [5.97ms]
+(pass) A14: setting zero commission saves two percent instead [22.14ms]
+(pass) A15: scheduling a meeting reopens a won lead into MEETING status [32.01ms]
+(pass) A18: CSV exporter preserves a spreadsheet formula prefix [0.17ms]
+(pass) A22: priority descending returns NORMAL then LOW then HIGH [34.04ms]
+(pass) A24: createLead allows duplicate phone identities in different formats [40.39ms]
+(pass) A17: expired in-memory data is returned despite its TTL [0.25ms]
+(pass) A16: timezone-free meeting date shifts 5.5 hours across server timezones [108.48ms]
+
+audit\2026-09-20\anonymous-routes.test.js:
+Checked 68 protected route-method combinations
+(pass) Anonymous requests are rejected across protected route handlers [694.59ms]
+
+ 18 pass
+ 0 fail
+ 99 expect() calls
+Ran 18 tests across 2 files. [1.75s]

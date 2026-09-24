@@ -1,0 +1,139 @@
+bun test v1.4.0 (34cbb9a40)
+
+tests\attendance-rules.test.ts:
+(pass) ORVION Smart Attendance Rules (10:10 AM Cutoff & 6:30 PM Auto Clock-Out) > 1. isBefore930AM and isBeforeOrAt1010AM correctly classify attendance timing gates [28.03ms]
+(pass) ORVION Smart Attendance Rules (10:10 AM Cutoff & 6:30 PM Auto Clock-Out) > 2. Clocking In before 09:30 AM is rejected and clocking in at or after 09:30 AM before 10:10 AM marks status as PRESENT [40.42ms]
+(pass) ORVION Smart Attendance Rules (10:10 AM Cutoff & 6:30 PM Auto Clock-Out) > 3. Clocking In after 10:10 AM marks status as HALF_DAY (Late Check-In) [46.63ms]
+(pass) ORVION Smart Attendance Rules (10:10 AM Cutoff & 6:30 PM Auto Clock-Out) > 4. Clocking in at exactly 10:11 AM is recorded as HALF_DAY [45.66ms]
+(pass) ORVION Smart Attendance Rules (10:10 AM Cutoff & 6:30 PM Auto Clock-Out) > 5. Repeated clock-in on the same day keeps the original attendance record [43.77ms]
+(pass) ORVION Smart Attendance Rules (10:10 AM Cutoff & 6:30 PM Auto Clock-Out) > 6. Manual Clock-Out calculates work hours and pauses lead routing [76.06ms]
+(pass) ORVION Smart Attendance Rules (10:10 AM Cutoff & 6:30 PM Auto Clock-Out) > 7. getShiftEndDateTime generates 18:30 IST shift end [5.83ms]
+
+tests\bulk-import.test.ts:
+(pass) ORVION Bulk Leads & Calling Data Import Service > 1. Bulk Leads Import - Direct Assignment to Executive [44.38ms]
+(pass) ORVION Bulk Leads & Calling Data Import Service > 2. Bulk Leads Import - Duplicate Detection (Skip vs Update) [44.79ms]
+(pass) ORVION Bulk Leads & Calling Data Import Service > 3. Bulk Leads Import - Round Robin Team Distribution [44.26ms]
+(pass) ORVION Bulk Leads & Calling Data Import Service > 4. Bulk Calling Data Import - Queuing Scheduled Calls for Executive [113.75ms]
+(pass) ORVION Bulk Leads & Calling Data Import Service > 5. Bulk Leads & Calling Import - Upload Without Name defaults to Unnamed Lead [45.39ms]
+(pass) ORVION Bulk Leads & Calling Data Import Service > 6. Admin Calling Pool - Assigns a selected count and removes it from the pool [46.95ms]
+(pass) ORVION Bulk Leads & Calling Data Import Service > 7. Executive Permission - Executive can update lead name during call/update logging [58.25ms]
+
+tests\bulk-upload-hub.test.ts:
+(pass) ORVION Bulk Upload Hub & CSV Processing Engine > 1. Bulk Leads Import: Creates new leads with sequential ORV IDs and UNASSIGNED pool [47.25ms]
+(pass) ORVION Bulk Upload Hub & CSV Processing Engine > 2. Bulk Leads Import: Round-robin distribution across team executives [86.81ms]
+(pass) ORVION Bulk Upload Hub & CSV Processing Engine > 3. Duplicate Phone Collision Handling: SKIP vs UPDATE policy [93.70ms]
+257 |     expect(result.createdCount).toBe(2);
+258 | 
+259 |     const callLogs = await prisma.leadUpdate.findMany({
+260 |       where: { remark: { contains: 'test-bulk' } },
+261 |     });
+262 |     expect(callLogs.length).toBeGreaterThanOrEqual(2);
+                                  ^
+error: expect(received).toBeGreaterThanOrEqual(expected)
+
+Expected: >= 2
+Received: 0
+
+      at <anonymous> (C:\Users\toxic\.gemini\antigravity\scratch\orvion\tests\bulk-upload-hub.test.ts:262:29)
+(fail) ORVION Bulk Upload Hub & CSV Processing Engine > 4. Bulk Calling Dispatch: Ingests batch, assigns to executive, sets call schedule [65.46ms]
+
+tests\comprehensive-audit.test.ts:
+(pass) ORVION Comprehensive CRM & Backend Engine Audit > 1. GET /api/leads supports both limit and pageSize parameters [11.07ms]
+(pass) ORVION Comprehensive CRM & Backend Engine Audit > 2. Global Omnibar /api/search finds candidate records for HR & Admin [4.63ms]
+(pass) ORVION Comprehensive CRM & Backend Engine Audit > 3. Global Omnibar /api/search isolates leads from HR access [3.41ms]
+(pass) ORVION Comprehensive CRM & Backend Engine Audit > 4. Followups API /api/leads/[id]/followups correctly validates sessions and saves new followup [22.23ms]
+(pass) ORVION Comprehensive CRM & Backend Engine Audit > 5. completeFollowup synchronizes currentCategory and updates score [29.77ms]
+(pass) ORVION Comprehensive CRM & Backend Engine Audit > 6. GET /api/reports restricts HR from accessing customer sales metrics [1.05ms]
+(pass) ORVION Comprehensive CRM & Backend Engine Audit > 7. getPerformanceReport scopes metrics for Executive vs Admin [18.21ms]
+(pass) ORVION Comprehensive CRM & Backend Engine Audit > 8. GET /api/meetings strictly forbids HR role [0.92ms]
+(pass) ORVION Comprehensive CRM & Backend Engine Audit > 9. processBulkLeadsImport maps CHANNEL_PARTNER and OTHER categories [29.82ms]
+(pass) ORVION Comprehensive CRM & Backend Engine Audit > 10. bulkUpdateStatusLeads records status history and updates scores [48.89ms]
+(pass) ORVION Comprehensive CRM & Backend Engine Audit > 11. canAccessLead allows assigned Executive and Team Lead, blocks HR [0.19ms]
+(pass) ORVION Comprehensive CRM & Backend Engine Audit > 12. getCallingData scopes callToday without overlapping overdue calls [7.30ms]
+(pass) ORVION Comprehensive CRM & Backend Engine Audit > 13. Admin can change any executive password via PATCH /api/users, non-admin is forbidden [262.93ms]
+
+tests\crm-core.test.ts:
+(pass) ORVION Enterprise CRM Core Business Rules > 1. Multi-hop Reassignment Chain: Rahul -> Amit -> Priya -> Karan -> Rahul [123.36ms]
+(pass) ORVION Enterprise CRM Core Business Rules > 2. Not Answering (NA) moves lead out of Executive workspace into Admin queue [42.91ms]
+(pass) ORVION Enterprise CRM Core Business Rules > 3. Immutable remarks history never overwrites previous updates [67.25ms]
+(pass) ORVION Enterprise CRM Core Business Rules > 4. Strict Role-Based Isolation [0.22ms]
+(pass) ORVION Enterprise CRM Core Business Rules > 5. Admin Real Attention Metrics (Zero Hardcoding) [4.92ms]
+(pass) ORVION Enterprise CRM Core Business Rules > 6. RBAC: Executive & HR restricted from manual lead creation [12.98ms]
+(pass) ORVION Enterprise CRM Core Business Rules > 7. Story / Lead Dossier Restricted Exclusively to ADMIN [0.19ms]
+(pass) ORVION Enterprise CRM Core Business Rules > 8. Delete Lead & Bulk Delete Leads - Cascades related records safely [44.28ms]
+(pass) ORVION Enterprise CRM Core Business Rules > 9. Bulk Reassignment & Bulk Status Updates [91.87ms]
+
+tests\enterprise-features-kanban-leaderboard.test.ts:
+(pass) ORVION Lead Scoring Engine & Temperature Index > 1. Compute Lead Score: High closure stage and fresh updates compute HOT temperature [0.14ms]
+(pass) ORVION Lead Scoring Engine & Temperature Index > 2. Compute Lead Score: Overdue actions trigger penalty and COLD temperature [0.08ms]
+(pass) ORVION Lead Scoring Engine & Temperature Index > 3. Recalculate Lead Score: Updates database record with new score and temperature [6.98ms]
+
+tests\enterprise-pipeline-omnibar.test.ts:
+(pass) ORVION Real-Time Notification Center & Feature #4 Suite > 1. Create Categorized Notifications & Fetch via Service [20.49ms]
+(pass) ORVION Real-Time Notification Center & Feature #4 Suite > 2. Mark Single and All Notifications as Read [25.24ms]
+(pass) ORVION Real-Time Notification Center & Feature #4 Suite > 3. Delete Single & Clear All Notifications [23.74ms]
+(pass) ORVION Real-Time Notification Center & Feature #4 Suite > 4. Calendar Utilities Generate Valid RFC-5545 & Google Calendar URLs [1.71ms]
+
+tests\executive-tasks.test.ts:
+(pass) ORVION Daily Task Assignment & Deadline Management (Admin & HR) > 1. Security: Unauthorized and non-privileged users cannot assign tasks [1.43ms]
+(pass) ORVION Daily Task Assignment & Deadline Management (Admin & HR) > 2. Admin Mass Broadcast: Assign daily task to ALL active executives [18.67ms]
+(pass) ORVION Daily Task Assignment & Deadline Management (Admin & HR) > 3. HR Assignment: HR can assign task to a SPECIFIC executive [13.61ms]
+(pass) ORVION Daily Task Assignment & Deadline Management (Admin & HR) > 4. Executive Dashboard Query: Returns assigned daily tasks for the executive [2.90ms]
+(pass) ORVION Daily Task Assignment & Deadline Management (Admin & HR) > 5. Executive Daily 1-Click Completion: Toggles status to COMPLETED with completedAt timestamp [14.19ms]
+(pass) ORVION Daily Task Assignment & Deadline Management (Admin & HR) > 6. Overdue Evaluation: Tasks with past deadline are marked OVERDUE on query [10.87ms]
+(pass) ORVION Daily Task Assignment & Deadline Management (Admin & HR) > 7. Deletion: Admin or HR can cancel and delete an assigned task [15.62ms]
+
+tests\hr-module.test.ts:
+(pass) ORVION HR & Workforce Management Module (Zero Lead Access) > 1. Security: HR is strictly blocked from accessing leads and reassignments [1.36ms]
+(pass) ORVION HR & Workforce Management Module (Zero Lead Access) > 2. Attendance & Smart Lead Routing Synchronization [245.82ms]
+(pass) ORVION HR & Workforce Management Module (Zero Lead Access) > 3. Leave Management & Approval Safeguards [153.11ms]
+(pass) ORVION HR & Workforce Management Module (Zero Lead Access) > 4. Targets & Commissions Calculator (Zero Lead Privacy) [28.29ms]
+(pass) ORVION HR & Workforce Management Module (Zero Lead Access) > 5. Recruitment Pipeline & 1-Click Candidate Hiring [118.01ms]
+(pass) ORVION HR & Workforce Management Module (Zero Lead Access) > 6. HR Permissions: HR can create Sales Executive and Team Lead accounts [190.68ms]
+(pass) ORVION HR & Workforce Management Module (Zero Lead Access) > 7. HR Security Enforced: HR is strictly forbidden from creating ADMIN or HR accounts [0.96ms]
+(pass) ORVION HR & Workforce Management Module (Zero Lead Access) > 8. Export 1-Month and Selected Date Attendance Sheets (CSV and Summary Rollup) [13.56ms]
+
+tests\lead-contact.test.ts:
+(pass) ORVION Direct Contact Utilities (Call & WhatsApp) > 1. formatWhatsAppUrl generates valid wa.me link with 10-digit Indian phone [0.12ms]
+(pass) ORVION Direct Contact Utilities (Call & WhatsApp) > 2. formatWhatsAppUrl correctly preserves country code if already present [0.02ms]
+(pass) ORVION Direct Contact Utilities (Call & WhatsApp) > 3. formatWhatsAppUrl strips leading 0 from 11-digit numbers and normalizes [0.01ms]
+(pass) ORVION Direct Contact Utilities (Call & WhatsApp) > 4. formatTelUrl produces standard tel: format [0.04ms]
+
+tests\meeting-visibility.test.ts:
+(pass) ORVION Weekly Meeting Visibility > executive-created meeting is visible in weekly results for executive and admin [42.14ms]
+
+tests\profile-management.test.ts:
+(pass) ORVION User Profile & Password Management > 1. Security: Unauthenticated profile requests return 401 Unauthorized [0.80ms]
+(pass) ORVION User Profile & Password Management > 2. GET /api/profile returns full authenticated user profile [3.28ms]
+(pass) ORVION User Profile & Password Management > 3. PATCH /api/profile updates personal details and routing availability [12.70ms]
+(pass) ORVION User Profile & Password Management > 4. PATCH /api/profile rejects password change with invalid current password [67.46ms]
+(pass) ORVION User Profile & Password Management > 5. PATCH /api/profile successfully updates password with valid current password [287.20ms]
+(pass) ORVION User Profile & Password Management > 6. Self-Healing: Stale UUID with valid email resolves profile and sets refreshed cookie [3.72ms]
+(pass) ORVION User Profile & Password Management > 7. Admin User Creation - Admin can create an HR user with role HR [89.59ms]
+(pass) ORVION User Profile & Password Management > 8. HR Login & Profile Flow - HR user can log in with credentials and view profile [170.25ms]
+(pass) ORVION User Profile & Password Management > 9. Team Lead Profile Fetching - Returns complete Team Lead profile with teamStats [198.30ms]
+(pass) ORVION User Profile & Password Management > 10. Self-Healing Team Lead Profile - Resolves team even if session teamId was stale [84.14ms]
+
+tests\sla-and-enterprise-features.test.ts:
+(pass) ORVION Enterprise SLA Engine & Dual Notifications > 1. Smart SLA Engine detects uncontacted NEW lead (> 2 hours) [40.82ms]
+(pass) ORVION Enterprise SLA Engine & Dual Notifications > 2. Dual Notification: BOTH Team Lead and Admin receive high-priority alerts [1.64ms]
+(pass) ORVION Enterprise SLA Engine & Dual Notifications > 3. Deduplication: SLA check does not re-spam notifications within 24 hours [4.16ms]
+(pass) ORVION Enterprise SLA Engine & Dual Notifications > 4. API Route /api/sla/check dispatches and returns JSON summary [4.76ms]
+(pass) ORVION Enterprise SLA Engine & Dual Notifications > 5. CSV Export Utility generates valid RFC-4180 format with UTF-8 BOM [0.93ms]
+
+tests\team-management.test.ts:
+(pass) ORVION Team Management (Team Leads & Executive Assignments) > 1. Create team with initial Team Lead and Executive members [8.14ms]
+(pass) ORVION Team Management (Team Leads & Executive Assignments) > 2. Add an additional executive to existing team [5.79ms]
+(pass) ORVION Team Management (Team Leads & Executive Assignments) > 3. Reassign / Change Team Lead in existing team [8.02ms]
+(pass) ORVION Team Management (Team Leads & Executive Assignments) > 4. Remove executive member from team [7.70ms]
+(pass) ORVION Team Management (Team Leads & Executive Assignments) > 5. Enforce Rule: An active Team Lead cannot lead a second team (POST /api/teams) [3.23ms]
+(pass) ORVION Team Management (Team Leads & Executive Assignments) > 6. Enforce Rule: An active Team Lead cannot be reassigned to lead another team via PATCH [8.04ms]
+(pass) ORVION Team Management (Team Leads & Executive Assignments) > 7. Enforce Rule: An active Team Lead cannot be added as executive to another team [3.43ms]
+
+1 tests failed:
+(fail) ORVION Bulk Upload Hub & CSV Processing Engine > 4. Bulk Calling Dispatch: Ingests batch, assigns to executive, sets call schedule [65.46ms]
+
+ 88 pass
+ 1 fail
+ 397 expect() calls
+Ran 89 tests across 14 files. [4.57s]

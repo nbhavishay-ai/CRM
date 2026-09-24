@@ -1,0 +1,342 @@
+[
+  {
+    "route": "/api/users",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/users",
+    "method": "POST",
+    "status": 403
+  },
+  {
+    "route": "/api/users",
+    "method": "PATCH",
+    "status": 403
+  },
+  {
+    "route": "/api/users",
+    "method": "DELETE",
+    "status": 403
+  },
+  {
+    "route": "/api/teams",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/teams",
+    "method": "POST",
+    "status": 403
+  },
+  {
+    "route": "/api/teams/audit-missing-id",
+    "method": "DELETE",
+    "status": 403
+  },
+  {
+    "route": "/api/teams/audit-missing-id/members",
+    "method": "POST",
+    "status": 403
+  },
+  {
+    "route": "/api/teams/audit-missing-id/members",
+    "method": "PATCH",
+    "status": 403
+  },
+  {
+    "route": "/api/teams/audit-missing-id/members",
+    "method": "DELETE",
+    "status": 403
+  },
+  {
+    "route": "/api/tasks",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/tasks",
+    "method": "POST",
+    "status": 401
+  },
+  {
+    "route": "/api/tasks/audit-missing-id",
+    "method": "PATCH",
+    "status": 401
+  },
+  {
+    "route": "/api/tasks/audit-missing-id",
+    "method": "DELETE",
+    "status": 401
+  },
+  {
+    "route": "/api/sync",
+    "method": "GET",
+    "status": 403
+  },
+  {
+    "route": "/api/sync",
+    "method": "POST",
+    "status": 403
+  },
+  {
+    "route": "/api/sync/pulse",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/sla/check",
+    "method": "GET",
+    "status": 403
+  },
+  {
+    "route": "/api/sla/check",
+    "method": "POST",
+    "status": 403
+  },
+  {
+    "route": "/api/search",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/reports",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/push/subscribe",
+    "method": "POST",
+    "status": 401
+  },
+  {
+    "route": "/api/push/subscribe",
+    "method": "DELETE",
+    "status": 401
+  },
+  {
+    "route": "/api/profile",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/profile",
+    "method": "PATCH",
+    "status": 401
+  },
+  {
+    "route": "/api/notifications",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/notifications",
+    "method": "PATCH",
+    "status": 401
+  },
+  {
+    "route": "/api/notifications",
+    "method": "DELETE",
+    "status": 401
+  },
+  {
+    "route": "/api/meetings",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/meetings",
+    "method": "POST",
+    "status": 401
+  },
+  {
+    "route": "/api/meetings",
+    "method": "PATCH",
+    "status": 401
+  },
+  {
+    "route": "/api/leads",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/leads",
+    "method": "POST",
+    "status": 401
+  },
+  {
+    "route": "/api/leads",
+    "method": "DELETE",
+    "status": 401
+  },
+  {
+    "route": "/api/leads/audit-missing-id",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/leads/audit-missing-id",
+    "method": "PATCH",
+    "status": 401
+  },
+  {
+    "route": "/api/leads/audit-missing-id",
+    "method": "DELETE",
+    "status": 401
+  },
+  {
+    "route": "/api/leads/audit-missing-id/updates",
+    "method": "POST",
+    "status": 401
+  },
+  {
+    "route": "/api/leads/audit-missing-id/stage",
+    "method": "PATCH",
+    "status": 401
+  },
+  {
+    "route": "/api/leads/audit-missing-id/followups",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/leads/audit-missing-id/followups",
+    "method": "POST",
+    "status": 401
+  },
+  {
+    "route": "/api/leads/audit-missing-id/assign",
+    "method": "POST",
+    "status": 401
+  },
+  {
+    "route": "/api/leads/bulk-action",
+    "method": "POST",
+    "status": 401
+  },
+  {
+    "route": "/api/import/leads",
+    "method": "POST",
+    "status": 403
+  },
+  {
+    "route": "/api/import/calling",
+    "method": "POST",
+    "status": 403
+  },
+  {
+    "route": "/api/hr/recruitment",
+    "method": "GET",
+    "status": 403
+  },
+  {
+    "route": "/api/hr/recruitment",
+    "method": "POST",
+    "status": 403
+  },
+  {
+    "route": "/api/hr/recruitment/audit-missing-id",
+    "method": "PATCH",
+    "status": 403
+  },
+  {
+    "route": "/api/hr/recruitment/audit-missing-id",
+    "method": "DELETE",
+    "status": 403
+  },
+  {
+    "route": "/api/hr/payroll",
+    "method": "GET",
+    "status": 403
+  },
+  {
+    "route": "/api/hr/payroll",
+    "method": "POST",
+    "status": 403
+  },
+  {
+    "route": "/api/hr/mark-out-requests",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/hr/mark-out-requests",
+    "method": "POST",
+    "status": 401
+  },
+  {
+    "route": "/api/hr/leaves",
+    "method": "GET",
+    "status": 403
+  },
+  {
+    "route": "/api/hr/leaves",
+    "method": "POST",
+    "status": 401
+  },
+  {
+    "route": "/api/hr/leaves/audit-missing-id",
+    "method": "PATCH",
+    "status": 403
+  },
+  {
+    "route": "/api/hr/leaves/audit-missing-id",
+    "method": "DELETE",
+    "status": 403
+  },
+  {
+    "route": "/api/hr/employees",
+    "method": "GET",
+    "status": 403
+  },
+  {
+    "route": "/api/hr/employees",
+    "method": "POST",
+    "status": 403
+  },
+  {
+    "route": "/api/hr/attendance",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/hr/attendance",
+    "method": "POST",
+    "status": 401
+  },
+  {
+    "route": "/api/hr/attendance/export",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/calling",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/calling/assign",
+    "method": "GET",
+    "status": 403
+  },
+  {
+    "route": "/api/calling/assign",
+    "method": "POST",
+    "status": 403
+  },
+  {
+    "route": "/api/calling/assign",
+    "method": "DELETE",
+    "status": 403
+  },
+  {
+    "route": "/api/auth/me",
+    "method": "GET",
+    "status": 401
+  },
+  {
+    "route": "/api/audit",
+    "method": "GET",
+    "status": 403
+  }
+]
